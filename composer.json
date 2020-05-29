@@ -1,0 +1,13 @@
+{
+  "name": "minutemailer/eloquent-show-more",
+  "type": "library",
+  "require": {
+    "php": ">=7.2",
+    "illuminate/database": "^5.8 || 6.* || 7.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Minutemailer\\EloquentShowMore\\": "app/"
+    }
+  }
+}
