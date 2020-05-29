@@ -22,21 +22,33 @@ class ShowMoreCollection extends Collection
         /** @var Model $model */
         $model = $this->first();
 
-        if (!$model->usesTimestamps()) {
-            throw new \InvalidArgumentException(\sprintf('The model needs to use the trait %s', HasTimestamps::class));
+        if (!$model->incrementing && !$model->usesTimestamps()) {
+            throw new \InvalidArgumentException(\sprintf('The model needs to have incrementing id or use the trait %s', HasTimestamps::class));
         }
 
-        $createdAtColumn = $model->getCreatedAtColumn();
-        $lastCreated = $this->max($createdAtColumn);
         $limit = $this->count();
 
         $columnsToFetch = array_keys($model->getAttributes());
-        $rows = $this->first()->newModelQuery()->where($createdAtColumn, '>', $lastCreated)->take($limit + 1)->get($columnsToFetch);
+
+        $column = $this->getColumn();
+        $rows = $this->first()->newModelQuery()->where($column, '>', $this->max($column))->take($limit + 1)->get($columnsToFetch);
 
         return [
             'hasMore' => $rows->count() > $limit,
             'data' => $rows->splice(0, $limit),
         ];
+    }
+
+    private function getColumn(): string
+    {
+        /** @var Model $model */
+        $model = $this->first();
+
+        if ($model->incrementing) {
+            return $model->getKeyName();
+        }
+
+        return $model->getCreatedAtColumn();
     }
 
     public function hasMore(): bool
