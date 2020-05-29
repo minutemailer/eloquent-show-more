@@ -12,7 +12,7 @@ class ShowMoreCollection extends Collection
 {
     public function showMore(): array
     {
-        if (!$this->hasMore()) {
+        if ($this->isEmpty()) {
             return [
                 'hasMore' => false,
                 'data' => new self(),
@@ -49,14 +49,5 @@ class ShowMoreCollection extends Collection
         }
 
         return $model->getCreatedAtColumn();
-    }
-
-    public function hasMore(): bool
-    {
-        if ($this->isEmpty()) {
-            return false;
-        }
-
-        return true;
     }
 }
