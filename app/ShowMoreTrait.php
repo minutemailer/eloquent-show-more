@@ -10,4 +10,9 @@ trait ShowMoreTrait
     {
         return new ShowMoreCollection($models);
     }
+
+    public function newEloquentBuilder($query)
+    {
+        return new ShowMoreBuilder($query);
+    }
 }

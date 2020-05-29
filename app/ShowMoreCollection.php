@@ -10,6 +10,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class ShowMoreCollection extends Collection
 {
+    /**
+     * @var ShowMoreBuilder
+     */
+    private $builder;
+
+    /**
+     * @var array $items
+     * @var ShowMoreBuilder $builder
+     */
+    public function __construct($items = [], $builder = null)
+    {
+        parent::__construct($items);
+        $this->builder = $builder;
+    }
+
     public function showMore(): array
     {
         if ($this->isEmpty()) {
@@ -31,7 +46,7 @@ class ShowMoreCollection extends Collection
         $columnsToFetch = array_keys($model->getAttributes());
 
         $column = $this->getColumn();
-        $rows = $model->newModelQuery()->where($column, '>', $this->max($column))->take($limit + 1)->get($columnsToFetch);
+        $rows = $this->builder->where($column, '>', $this->max($column))->take($limit + 1)->get($columnsToFetch);
 
         return [
             'hasMore' => $rows->count() > $limit,
