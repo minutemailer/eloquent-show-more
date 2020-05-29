@@ -31,7 +31,7 @@ class ShowMoreCollection extends Collection
         $columnsToFetch = array_keys($model->getAttributes());
 
         $column = $this->getColumn();
-        $rows = $this->first()->newModelQuery()->where($column, '>', $this->max($column))->take($limit + 1)->get($columnsToFetch);
+        $rows = $model->newModelQuery()->where($column, '>', $this->max($column))->take($limit + 1)->get($columnsToFetch);
 
         return [
             'hasMore' => $rows->count() > $limit,
