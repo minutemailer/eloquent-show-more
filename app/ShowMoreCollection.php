@@ -30,7 +30,8 @@ class ShowMoreCollection extends Collection
         $lastCreated = $this->max($createdAtColumn);
         $limit = $this->count();
 
-        $rows = $this->first()->newModelQuery()->where($createdAtColumn, '>', $lastCreated)->take($limit + 1)->get();
+        $columnsToFetch = array_keys($model->getAttributes());
+        $rows = $this->first()->newModelQuery()->where($createdAtColumn, '>', $lastCreated)->take($limit + 1)->get($columnsToFetch);
 
         return [
             'hasMore' => $rows->count() > $limit,
